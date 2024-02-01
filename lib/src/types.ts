@@ -2,9 +2,13 @@ import type { SbBlokData as SbBlok } from "@storyblok/js";
 
 type Nullable<T> = T | null;
 
+export type MetaProps = {
+  contentPropName?: string; // name of the prop that can accept the content
+};
+
 export type ComponentNode = {
   component?: unknown; // can be Astro/Solid components or StoryblokComponent
-  props?: Record<string, unknown>;
+  props?: Record<string, unknown> & MetaProps;
   content?: string | ComponentNode[];
 };
 

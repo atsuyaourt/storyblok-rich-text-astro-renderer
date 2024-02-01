@@ -31,13 +31,24 @@ const nodes = resolveRichTextToNodes(content, { schema, resolver });
         if (node == null) return;
 
         const { component: Component = Fragment, content, props } = node;
+
         let resolvedContent = content;
+        let trueProps = { ...props };
 
         if (Array.isArray(content)) {
-          resolvedContent = content.map(renderNode);
+          if (props && "contentPropName" in props && content.length === 1) {
+            let { contentPropName, ...tProps } = props;
+            trueProps = {
+              ...tProps,
+              [contentPropName]: content[0].content,
+            };
+            resolvedContent = undefined;
+          } else {
+            resolvedContent = content.map(renderNode);
+          }
         }
 
-        return <Component {...props}>{resolvedContent}</Component>;
+        return <Component {...trueProps}>{resolvedContent}</Component>;
       };
 
       return nodes.map(renderNode);
